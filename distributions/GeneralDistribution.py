@@ -39,7 +39,7 @@ class Distribution:
             
         file.close()
 
-        if not has_only_zeros_and_ones(file_data):
+        if not has_list_only_zeros_and_ones(file_data):
             raise ValueError('each item in txt file should be zero or one')
 
         self.data_list = ['%.1f' % item for item in file_data]
