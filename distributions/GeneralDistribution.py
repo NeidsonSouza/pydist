@@ -40,5 +40,3 @@ class Distribution:
             file.close()
 
         self.data = file_data
-
-        return self.data
