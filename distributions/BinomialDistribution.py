@@ -1,5 +1,5 @@
 import math
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 from .GeneralDistribution import Distribution
 
 class Binomial(Distribution):
@@ -20,7 +20,7 @@ class Binomial(Distribution):
         self.n = size
         self.probability = probability
 
-        super.__init__(self, self.calculate_mean(), self.calculate_stdev())
+        Distribution.__init__(self, self.calculate_mean(), self.calculate_stdev())
 
 
     def calculate_mean(self):
@@ -48,12 +48,12 @@ class Binomial(Distribution):
             float: standard deviation of the data set
         """
 
-        self.standard_deviation = math.sqrt(self.n * self.p * (1 - self.probability))
+        self.standard_deviation = math.sqrt(self.n * self.probability * (1 - self.probability))
 
         return self.probability
 
 
-    def replace_stats_with_data(self):
+    def replace_stats_with_file_data(self):
         """ Function to replace stats data regarding file data
 
         Args:
@@ -87,8 +87,70 @@ class Binomial(Distribution):
         plt.ylabel('count')
 
 
+    def pdf(self, k):
+        """ Probability density function calculator
+        for the gaussian distribution.
+        
+        Args:
+            x (float): point for calculating the probability density function
+            
+        Returns:
+            float: probability density function output
+        """
+        
+        a = math.factorial(self.n) / (math.factorial(k) * (math.factorial(self.n - k)))
+        b = (self.probability ** k) * (1 - self.probability) ** (self.n - k)
+        
+        return a * b
+
+
+    def plot_bar_pdf(self):
+        """ Function to plot the pdf of the binomial distribution
+        
+        Args:
+            None
+        
+        Returns:
+            list: x values for the pdf plot
+            list: y values for the pdf plot
+            
+        """
+        
+        x = []
+        y = []
+        
+        # calculate the x values to visualize
+        for i in range(self.n + 1):
+            x.append(i)
+            y.append(self.pdf(i))
+
+        # make the plots
+        plt.bar(x, y)
+        plt.title('Distribution of Outcomes')
+        plt.ylabel('Probability')
+        plt.xlabel('Outcome')
+
+        plt.show()
+
+
     def calculate_probability_density(self, k):
-        pass
+        """ Function to output a histogram of the instance variable data
+        using matplotlib pyplot library.
+        
+        Args:
+            None
+            
+        Returns:
+            None
+        """
+                
+        plt.bar(
+            x = ['0', '1'],
+            height = [(1 - self.probability) *self.n, self.probability * self.n]
+            )
+        plt.title('Bar Chart of Data')
+        plt.xlabel('outcome')
+        plt.ylabel('count')
 
 
     def __add__(self, other):
@@ -127,4 +189,4 @@ class Binomial(Distribution):
         """
 
         return "mean: {}, standard deviation: {}, probability: {}, n: {}".\
-            format(self.mean, self.stdev, self.probability, self.n)
+            format(self.mean, self.standard_deviation, self.probability, self.n)
